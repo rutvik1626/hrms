@@ -1,0 +1,13 @@
+# Base compose file — environment-agnostic definitions shared by every environment.
+# Application services (gateway, identity, corehr, ...) are added here as they are built.
+# Local dev infrastructure lives in docker-compose.override.yml.
+#
+#   docker compose -f deploy/docker-compose.yml -f deploy/docker-compose.override.yml --profile infra up -d
+
+name: hrms
+
+services: {}
+
+networks:
+  hrms:
+    name: hrms

@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../Hrms.Common/Hrms.Common.csproj" />
+    <ProjectReference Include="../Hrms.Domain.Abstractions/Hrms.Domain.Abstractions.csproj" />
+  </ItemGroup>
+</Project>

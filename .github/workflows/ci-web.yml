@@ -1,0 +1,45 @@
+name: ci-web
+
+on:
+  pull_request:
+    paths:
+      - "src/Web/**"
+      - ".github/workflows/ci-web.yml"
+  push:
+    branches: [main]
+    paths:
+      - "src/Web/**"
+      - ".github/workflows/ci-web.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: src/Web/hrms-web
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: src/Web/hrms-web/package-lock.json
+
+      - name: Install
+        run: npm ci --no-audit --no-fund
+
+      - name: Unit tests
+        run: npx ng test --watch=false
+
+      - name: Build (production)
+        run: npx ng build

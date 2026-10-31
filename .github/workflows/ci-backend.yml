@@ -1,0 +1,66 @@
+name: ci-backend
+
+on:
+  pull_request:
+    paths:
+      - "src/BuildingBlocks/**"
+      - "src/Services/**"
+      - "src/Gateway/**"
+      - "tests/**"
+      - "Hrms.sln"
+      - "Directory.*.props"
+      - "global.json"
+      - ".editorconfig"
+      - ".github/workflows/ci-backend.yml"
+  push:
+    branches: [main]
+    paths:
+      - "src/BuildingBlocks/**"
+      - "src/Services/**"
+      - "src/Gateway/**"
+      - "tests/**"
+      - "Hrms.sln"
+      - "Directory.*.props"
+      - "global.json"
+      - ".editorconfig"
+      - ".github/workflows/ci-backend.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+          cache: true
+          cache-dependency-path: "**/*.csproj"
+
+      - name: Restore
+        run: dotnet restore Hrms.sln
+
+      - name: Build
+        run: dotnet build Hrms.sln --no-restore -c Release
+
+      - name: Test
+        run: >
+          dotnet test Hrms.sln --no-build -c Release
+          --logger trx --results-directory TestResults
+          --collect:"XPlat Code Coverage"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-results
+          path: TestResults
+          retention-days: 7

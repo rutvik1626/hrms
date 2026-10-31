@@ -1,0 +1,144 @@
+# Local development overrides: infrastructure containers for running services from the IDE.
+# Profiles:
+#   infra — databases, broker, cache, storage, logging, mail catcher, pgAdmin
+#   full  — infra + all app services (app services join this profile as they are built)
+# Every value has a dev default; copy .env.example to .env to override.
+
+services:
+  postgres:
+    image: postgres:16.4-alpine
+    profiles: [infra, full]
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres_dev}
+      HRMS_DB_PASSWORD: ${HRMS_DB_PASSWORD:-hrms_dev}
+    ports: ["${POSTGRES_PORT:-5432}:5432"]
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks: [hrms]
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    profiles: [infra, full]
+    hostname: hrms-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-hrms}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-hrms_dev}
+      RABBITMQ_DEFAULT_VHOST: hrms
+    ports:
+      - "${RABBITMQ_PORT:-5672}:5672"
+      - "${RABBITMQ_UI_PORT:-15672}:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+    networks: [hrms]
+
+  redis:
+    image: redis:7.4-alpine
+    profiles: [infra, full]
+    command: ["redis-server", "--appendonly", "yes"]
+    ports: ["${REDIS_PORT:-6379}:6379"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks: [hrms]
+
+  # S3-compatible object storage for local dev (see docs/adr/0002). Prod uses AWS S3.
+  # Credentials come from ./seaweedfs/s3.json (dev-only keys).
+  s3:
+    image: chrislusf/seaweedfs:3.80
+    profiles: [infra, full]
+    command: ["server", "-dir=/data", "-s3", "-s3.port=8333", "-s3.config=/etc/seaweedfs/s3.json"]
+    ports:
+      - "${S3_PORT:-8333}:8333"
+      - "${S3_MASTER_UI_PORT:-9333}:9333"
+    volumes:
+      - s3-data:/data
+      - ./seaweedfs/s3.json:/etc/seaweedfs/s3.json:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:9333/cluster/status >/dev/null"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    networks: [hrms]
+
+  # One-shot: creates the private files bucket, then exits.
+  s3-init:
+    image: amazon/aws-cli:2.18.0
+    profiles: [infra, full]
+    depends_on:
+      s3:
+        condition: service_healthy
+    environment:
+      AWS_ACCESS_KEY_ID: hrms
+      AWS_SECRET_ACCESS_KEY: hrms_dev_secret
+      AWS_DEFAULT_REGION: ap-south-1
+      S3_BUCKET: ${S3_BUCKET:-hrms-files}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - >
+        for i in 1 2 3 4 5 6 7 8 9 10; do
+          aws --endpoint-url http://s3:8333 s3api head-bucket --bucket $${S3_BUCKET} 2>/dev/null && exit 0;
+          aws --endpoint-url http://s3:8333 s3api create-bucket --bucket $${S3_BUCKET} && exit 0;
+          sleep 3;
+        done; exit 1
+    networks: [hrms]
+
+  seq:
+    image: datalust/seq:2024.3
+    profiles: [infra, full]
+    environment:
+      ACCEPT_EULA: "Y"
+      SEQ_FIRSTRUN_NOAUTHENTICATION: "true"
+    ports:
+      - "${SEQ_UI_PORT:-5341}:80"
+      - "${SEQ_INGEST_PORT:-5342}:5341"
+    volumes:
+      - seq-data:/data
+    networks: [hrms]
+
+  mailpit:
+    image: axllent/mailpit:v1.20
+    profiles: [infra, full]
+    ports:
+      - "${MAILPIT_SMTP_PORT:-1025}:1025"
+      - "${MAILPIT_UI_PORT:-8025}:8025"
+    networks: [hrms]
+
+  pgadmin:
+    image: dpage/pgadmin4:8.12
+    profiles: [infra, full]
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@example.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-hrms_dev}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    ports: ["${PGADMIN_PORT:-5050}:80"]
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks: [hrms]
+
+volumes:
+  postgres-data:
+  rabbitmq-data:
+  redis-data:
+  s3-data:
+  seq-data:
+  pgadmin-data:

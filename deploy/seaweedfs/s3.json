@@ -1,0 +1,11 @@
+{
+  "identities": [
+    {
+      "name": "hrms-dev",
+      "credentials": [
+        { "accessKey": "hrms", "secretKey": "hrms_dev_secret" }
+      ],
+      "actions": ["Admin", "Read", "List", "Tagging", "Write"]
+    }
+  ]
+}

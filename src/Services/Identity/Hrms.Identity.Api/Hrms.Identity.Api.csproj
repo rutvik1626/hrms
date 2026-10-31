@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <UserSecretsId>hrms-identity-api</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Hrms.Identity.Infrastructure/Hrms.Identity.Infrastructure.csproj" />
+    <ProjectReference Include="../../../BuildingBlocks/Hrms.Web/Hrms.Web.csproj" />
+  </ItemGroup>
+</Project>

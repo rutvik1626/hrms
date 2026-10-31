@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../Hrms.Common/Hrms.Common.csproj" />
+  </ItemGroup>
+</Project>

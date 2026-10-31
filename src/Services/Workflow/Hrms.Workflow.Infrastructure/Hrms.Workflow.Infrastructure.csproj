@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../Hrms.Workflow.Application/Hrms.Workflow.Application.csproj" />
+    <ProjectReference Include="../../../BuildingBlocks/Hrms.Persistence/Hrms.Persistence.csproj" />
+    <ProjectReference Include="../../../BuildingBlocks/Hrms.Messaging/Hrms.Messaging.csproj" />
+    <ProjectReference Include="../../../BuildingBlocks/Hrms.Storage/Hrms.Storage.csproj" />
+  </ItemGroup>
+</Project>

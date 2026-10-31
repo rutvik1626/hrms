@@ -1,0 +1,44 @@
+name: ci-mobile
+
+on:
+  pull_request:
+    paths:
+      - "src/Mobile/**"
+      - ".github/workflows/ci-mobile.yml"
+  push:
+    branches: [main]
+    paths:
+      - "src/Mobile/**"
+      - ".github/workflows/ci-mobile.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: src/Mobile/hrms_mobile
+
+jobs:
+  analyze-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test

@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <UserSecretsId>hrms-talent-api</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Hrms.Talent.Infrastructure/Hrms.Talent.Infrastructure.csproj" />
+    <ProjectReference Include="../../../BuildingBlocks/Hrms.Web/Hrms.Web.csproj" />
+  </ItemGroup>
+</Project>

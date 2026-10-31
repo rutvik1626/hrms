@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="NetArchTest.Rules" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <Using Include="FluentAssertions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/Services/Identity/Hrms.Identity.Domain/Hrms.Identity.Domain.csproj" />
+    <ProjectReference Include="../../src/Services/Identity/Hrms.Identity.Application/Hrms.Identity.Application.csproj" />
+    <ProjectReference Include="../../src/Services/Identity/Hrms.Identity.Infrastructure/Hrms.Identity.Infrastructure.csproj" />
+    <ProjectReference Include="../../src/Services/CoreHr/Hrms.CoreHr.Domain/Hrms.CoreHr.Domain.csproj" />
+    <ProjectReference Include="../../src/Services/CoreHr/Hrms.CoreHr.Application/Hrms.CoreHr.Application.csproj" />
+    <ProjectReference Include="../../src/Services/CoreHr/Hrms.CoreHr.Infrastructure/Hrms.CoreHr.Infrastructure.csproj" />
+    <ProjectReference Include="../../src/Services/Time/Hrms.Time.Domain/Hrms.Time.Domain.csproj" />
+    <ProjectReference Include="../../src/Services/Time/Hrms.Time.Application/Hrms.Time.Application.csproj" />
+    <ProjectReference Include="../../src/Services/Time/Hrms.Time.Infrastructure/Hrms.Time.Infrastructure.csproj" />
+    <ProjectReference Include="../../src/Services/Payroll/Hrms.Payroll.Domain/Hrms.Payroll.Domain.csproj" />
+    <ProjectReference Include="../../src/Services/Payroll/Hrms.Payroll.Application/Hrms.Payroll.Application.csproj" />
+    <ProjectReference Include="../../src/Services/Payroll/Hrms.Payroll.Infrastructure/Hrms.Payroll.Infrastructure.csproj" />
+    <ProjectReference Include="../../src/Services/Workflow/Hrms.Workflow.Domain/Hrms.Workflow.Domain.csproj" />
+    <ProjectReference Include="../../src/Services/Workflow/Hrms.Workflow.Application/Hrms.Workflow.Application.csproj" />
+    <ProjectReference Include="../../src/Services/Workflow/Hrms.Workflow.Infrastructure/Hrms.Workflow.Infrastructure.csproj" />
+    <ProjectReference Include="../../src/Services/Expense/Hrms.Expense.Domain/Hrms.Expense.Domain.csproj" />
+    <ProjectReference Include="../../src/Services/Expense/Hrms.Expense.Application/Hrms.Expense.Application.csproj" />
+    <ProjectReference Include="../../src/Services/Expense/Hrms.Expense.Infrastructure/Hrms.Expense.Infrastructure.csproj" />
+    <ProjectReference Include="../../src/Services/Talent/Hrms.Talent.Domain/Hrms.Talent.Domain.csproj" />
+    <ProjectReference Include="../../src/Services/Talent/Hrms.Talent.Application/Hrms.Talent.Application.csproj" />
+    <ProjectReference Include="../../src/Services/Talent/Hrms.Talent.Infrastructure/Hrms.Talent.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>

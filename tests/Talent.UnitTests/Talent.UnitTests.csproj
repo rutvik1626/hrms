@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="NSubstitute" />
+
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <Using Include="FluentAssertions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/Services/Talent/Hrms.Talent.Domain/Hrms.Talent.Domain.csproj" />
+    <ProjectReference Include="../../src/Services/Talent/Hrms.Talent.Application/Hrms.Talent.Application.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,20 @@
+name: hrms_mobile
+description: HRMS mobile app (employee self-service, manager approvals, HR-lite).
+publish_to: "none"
+version: 0.1.0+1
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
