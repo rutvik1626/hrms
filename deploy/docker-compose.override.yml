@@ -60,7 +60,7 @@ services:
   # S3-compatible object storage for local dev (see docs/adr/0002). Prod uses AWS S3.
   # Credentials come from ./seaweedfs/s3.json (dev-only keys).
   s3:
-    image: chrislusf/seaweedfs:3.80
+    image: chrislusf/seaweedfs:4.50
     profiles: [infra, full]
     command: ["server", "-dir=/data", "-s3", "-s3.port=8333", "-s3.config=/etc/seaweedfs/s3.json"]
     ports:
