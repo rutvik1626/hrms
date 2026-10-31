@@ -120,7 +120,7 @@ services:
     networks: [hrms]
 
   pgadmin:
-    image: dpage/pgadmin4:8.12
+    image: dpage/pgadmin4:9.18
     profiles: [infra, full]
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@example.com}
